@@ -1,0 +1,12 @@
+#!/bin/bash -eu
+
+smudgable_files () {
+  for glob in $(awk '/filter=/ {print $1}' .gitattributes); do
+    find . -name "$glob" -type f
+  done
+}
+
+declare -a files=$(smudgable_files)
+echo "removing" ${files}
+rm -f -- ${files[@]}
+git checkout HEAD -- ${files[@]}
